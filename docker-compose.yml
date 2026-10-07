@@ -1,4 +1,15 @@
 services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api/v1}
+    container_name: face-auth-frontend
+    ports:
+      - "${WEB_PORT:-5173}:80"
+    depends_on:
+      - backend
+
   backend:
     build:
       context: ./backend

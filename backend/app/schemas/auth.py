@@ -45,4 +45,5 @@ class LoginResponse(BaseModel):
 
 class MeResponse(BaseModel):
     success: bool
+    name: str
     email: EmailStr

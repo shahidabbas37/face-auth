@@ -15,6 +15,8 @@ from app.services.auth import (
     delete_user as delete_user_service,
 )
 from app.services.dependencies import get_current_user
+from app.services.vector_db import get_face_by_email
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 
 router = APIRouter(
@@ -59,10 +61,20 @@ async def login_user(
 async def get_me(
     email: str = Depends(get_current_user),
 ):
+    user = get_face_by_email(email)
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found.",
+        )
+
     return {
         "success": True,
-        "email": email,
+        "name": user.payload["name"],
+        "email": user.payload["email"],
     }
+
 @router.delete("/me")
 async def delete_me(
     email: str = Depends(get_current_user),

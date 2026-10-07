@@ -1,6 +1,6 @@
 # Face Auth
 
-A face-recognition authentication application built as a full-stack learning project. Users can create an account with their name, email address, and a face photo, then sign in with their email and a new face photo. The photo can be selected from the device or captured using a live camera.
+A face-recognition authentication application built as a full-stack  project. Users can create an account with their name, email address, and a face photo, then sign in with their email and a new face photo. The photo can be selected from the device or captured using a live camera.
 
 The project brings together a React frontend, a FastAPI REST API, the open-source [`face_recognition`](https://github.com/ageitgey/face_recognition) library, and Qdrant vector search. Docker Compose runs the frontend, backend, and vector database as one application.
 
@@ -8,11 +8,15 @@ The project brings together a React frontend, a FastAPI REST API, the open-sourc
 
 ### Create an account
 
-![Face Auth signup screen](screenshots/Screenshot%20from%202026-10-07%2018-51-11.png)
+![Face Auth signup screen](screenshots/Screenshot1.png)
 
 ### Photo selected for signup
 
-![Face Auth signup screen with a selected face photo](screenshots/Screenshot%20from%202026-10-07%2018-52-12.png)
+![Face Auth signup screen with a selected face photo](screenshots/Screenshot2.png)
+
+### Photo selected from live camra
+
+![Face Auth signup screen with  select photo from live camra](screenshots/Screenshot3.png)
 
 ## Features
 
@@ -51,39 +55,35 @@ The recommended way to run this project is with Docker Compose. The backend uses
 Replace the URL below with this repository's GitHub URL:
 
 ```sh
-git clone <repository-url>
+git clone https://github.com/shahidabbas37/face-auth
 cd face-auth
 ```
 
 ### 2. Configure environment variables
 
-Create your local environment file from the example:
+Create `.env` in the project root by copying the values from `.env.example`:
 
 ```sh
 cp .env.example .env
 ```
 
-Before using the app, edit `.env` and replace `JWT_SECRET_KEY` with a unique, private value. You can generate one with:
-
-```sh
-openssl rand -hex 32
-```
-
-Do not commit `.env` or share the generated secret. The example file is safe to commit; local `.env` files are ignored by Git.
+Change `JWT_SECRET_KEY` in `.env` to your own secret. Do not commit `.env`.
 
 ### 3. Build and start the application
+
+```sh
+docker compose up --build
+```
+
+The first build downloads base images and installs the backend and frontend dependencies. Later starts are usually faster. This runs Compose in the foreground; press `Ctrl+C` to stop the services.
+
+To run the services in the background instead, add `-d`:
 
 ```sh
 docker compose up --build -d
 ```
 
-The first build downloads base images and installs the backend and frontend dependencies. Later starts are usually faster. To follow service logs:
-
-```sh
-docker compose logs -f
-```
-
-Press `Ctrl+C` to stop following logs; this does not stop the containers.
+Stop background services with `docker compose down`.
 
 ### 4. Open the services
 
@@ -105,10 +105,10 @@ Stop and remove the application containers and network:
 docker compose down
 ```
 
-This leaves the named `qdrant_data` volume intact, so registered face vectors remain available the next time the app starts. Start it again with:
+This leaves the named `qdrant_data` volume intact, so registered face vectors remain available the next time the app starts. Start the services again with:
 
 ```sh
-docker compose up -d
+docker compose up --build
 ```
 
 To also permanently delete Qdrant's stored data, use:
